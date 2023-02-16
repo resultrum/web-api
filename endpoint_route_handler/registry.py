@@ -2,15 +2,15 @@
 # @author: Simone Orsi <simone.orsi@camptocamp.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
+import functools
 import importlib
 import json
-from functools import partial
 
 from psycopg2 import sql
 from psycopg2.extensions import AsIs
 from psycopg2.extras import execute_values
 
-from odoo import http, tools
+from odoo import tools
 from odoo.tools import DotDict
 
 from odoo.addons.base.models.ir_model import query_insert
@@ -348,8 +348,10 @@ class EndpointRule:
         handler = self._get_handler()
         pargs = self.handler_options.get("default_pargs", ())
         kwargs = self.handler_options.get("default_kwargs", {})
-        method = partial(handler, *pargs, **kwargs)
-        return http.EndPoint(method, self.routing)
+        endpoint = functools.partial(handler, *pargs, **kwargs)
+        functools.update_wrapper(endpoint, handler)
+        endpoint.routing = self.routing
+        return endpoint
 
     @property
     def handler_options(self):
