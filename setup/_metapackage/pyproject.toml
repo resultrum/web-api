@@ -1,0 +1,12 @@
+[project]
+name = "odoo-addon-endpoint-route-handler"
+version = "19.0.20260331.0"
+
+dependencies = [
+]
+
+classifiers = [
+    "Programming Language :: Python",
+    "Framework :: Odoo",
+    "Framework :: Odoo :: 19.0",
+]
